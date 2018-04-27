@@ -805,7 +805,7 @@ class User extends \Phalcon\Mvc\Model
 
     /**
      * Validations and business logic.
-     */
+
     public function validation()
     {
         $this->validate(new Uniqueness(
@@ -817,7 +817,7 @@ class User extends \Phalcon\Mvc\Model
 
         return true !== $this->validationHasFailed();
     }
-
+     */
     /**
      * Initialize method for model.
      */

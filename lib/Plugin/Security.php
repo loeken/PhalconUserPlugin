@@ -89,6 +89,7 @@ class Security extends Plugin
         $auth = $this->getAuth($dispatcher);
         $view = $this->getView($dispatcher);
 
+
         if ($auth->hasRememberMe()) {
             $auth->loginWithRememberMe(false);
         }
@@ -97,6 +98,7 @@ class Security extends Plugin
         $pupConfig = $this->getConfigStructure($config, $dispatcher);
 
         if ($auth->isUserSignedIn()) {
+
             $actionName = $dispatcher->getActionName();
             $controllerName = $dispatcher->getControllerName();
 
@@ -106,15 +108,16 @@ class Security extends Plugin
         }
 
         $needsIdentity = $this->needsIdentity($pupConfig, $dispatcher);
+
         $identity = $auth->getIdentity();
 
         if (true === $needsIdentity) {
+
             if (!is_array($identity)) {
+
                 $this->flash->notice('Private area. Please login.');
 
-                $this->view->disable();
-
-                return $this->response->redirect($config->pup->redirect->failure)->send();
+                return $this->response->redirect($config->pup->redirect->failure . $_SERVER['REQUEST_URI'])->send();
             }
         }
 
@@ -133,11 +136,14 @@ class Security extends Plugin
     {
         $actionName = $dispatcher->getActionName();
         $controllerName = $dispatcher->getControllerName();
+        $moduleName = $dispatcher->getModuleName();
 
         if ($config['type'] == 'public') { // all except ..
             return $this->checkPublicResources($config['resources'], $actionName, $controllerName);
         } else {
-            return $this->checkPrivateResources($config['resources'], $actionName, $controllerName);
+            $r = $this->checkPrivateResources($config['resources'], $actionName, $controllerName, $moduleName);
+
+            return $r;
         }
     }
 
@@ -178,17 +184,26 @@ class Security extends Plugin
      *
      * @return bool
      */
-    private function checkPrivateResources($resources, $actionName, $controllerName)
+    private function checkPrivateResources($resources, $actionName, $controllerName, $moduleName = false)
     {
         $resources = isset($resources['*']) ? $resources['*'] : $resources;
 
-        foreach ($resources as $controller => $actions) {
-            if ($controller == $controllerName) {
-                if (isset($controller['*'])) {
-                    return true;
-                } else {
-                    if (in_array($actionName, $actions)) {
-                        return false;
+        foreach ($resources as $module => $controllers) {
+
+            foreach ($controllers as $controller => $actions) {
+
+                if ($module == $moduleName ) {
+
+                    if ($controller == $controllerName) {
+                        if (isset($controller['*'])) {
+                            return true;
+                        } else {
+                            if (in_array($actionName, $actions)) {
+                                return false;
+                            }
+                            else {
+                                return false;                            }
+                        }
                     }
                 }
             }
@@ -205,7 +220,7 @@ class Security extends Plugin
      *
      * @return \Phalcon\Config
      *
-     * @throws Exception
+     * @throws \Exception
      */
     private function getConfigStructure(Config $config, Dispatcher $dispatcher)
     {
@@ -217,23 +232,23 @@ class Security extends Plugin
                 if (isset($config['pup'][$module]['resources'])) {
                     $config = $config->pup->$module->resources->toArray();
                 } else {
-                    throw new Exception('Wrong configuration, need "resources" section or module "'.$module.'" section not filled ');
+                    throw new \Exception('Wrong configuration, need "resources" section or module "'.$module.'" section not filled ');
                 }
             } else {
                 $config = $config->pup->resources->toArray();
             }
 
             if (!isset($config['type']) || (isset($config['type']) && !in_array($config['type'], $this->resourceTypes))) {
-                throw new Exception('Wrong configuration for key "type" or the key does not exists');
+                throw new \Exception('Wrong configuration for key "type" or the key does not exists');
             }
 
             if (!isset($config['resources']) || (isset($config['resources']) && !is_array($config['resources']))) {
-                throw new Exception('Resources key must be an array');
+                throw new \Exception('Resources key must be an array');
             }
 
             return $config;
         } else {
-            throw new Exception('Configuration error: I couldn\'t find the configuration key "pup" ');
+            throw new \Exception('Configuration error: I couldn\'t find the configuration key "pup" ');
         }
     }
 }
