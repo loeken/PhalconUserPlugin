@@ -161,7 +161,7 @@ class Auth extends Component
             $user = $this->newUser()
                 ->setName($facebookUser['name'])
                 ->setEmail($email)
-                ->setPassword($this->di->get('security')->hash($password))
+                ->setPassword($di->get('security')->hash($password))
                 ->setFacebookId($facebookUser['id'])
                 ->setFacebookName($facebookUser['name'])
                 ->setFacebookData(serialize($facebookUser));
@@ -211,7 +211,7 @@ class Auth extends Component
 
     protected function authenticateOrCreateLinkedInUser($email, $info)
     {
-        $pupRedirect = $this->di->get('config')->pup->redirect;
+        $pupRedirect = $di->get('config')->pup->redirect;
 
         preg_match('#id=\d+#', $info['siteStandardProfileRequest']['url'], $matches);
 
@@ -388,7 +388,6 @@ class Auth extends Component
      */
     protected function createUser($user)
     {
-        $pupRedirect = $this->getDI()->get('config')->pup->redirect;
         if (true === $user->create()) {
             $this->setIdentity($user);
             $this->saveSuccessLogin($user);
