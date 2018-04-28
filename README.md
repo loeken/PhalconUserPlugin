@@ -174,10 +174,8 @@ controller:
         'type' => 'private',
         'resources' => [
             '*' => [
-                "modulename" => [
-                    // All except
-                    'user' => ['login', 'register']
-                ]
+                // All except
+                'user' => ['login', 'register']
             ]
         ]
     ]
@@ -195,10 +193,8 @@ In the example bellow, the ONLY PRIVATE resources are the actions ACCOUNT and PR
     'resources' => [
         'type' => 'private',
         'resources' => [
-            "modulename" => [
-                'user' => [
-                    'user' => ['account', 'profile']
-                ]
+            'user' => [
+                'user' => ['account', 'profile']
             ]
         ]
     ]

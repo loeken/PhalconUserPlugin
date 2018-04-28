@@ -111,6 +111,7 @@ class Security extends Plugin
         if (true === $needsIdentity) {
             if (!is_array($identity)) {
                 $this->flash->notice('Private area. Please login.');
+
                 return $this->response->redirect($config->pup->redirect->failure)->send();
             }
         }
@@ -214,23 +215,23 @@ class Security extends Plugin
                 if (isset($config['pup'][$module]['resources'])) {
                     $config = $config->pup->$module->resources->toArray();
                 } else {
-                    throw new Exception('Wrong configuration, need "resources" section or module "'.$module.'" section not filled ');
+                    throw new \Exception('Wrong configuration, need "resources" section or module "'.$module.'" section not filled ');
                 }
             } else {
                 $config = $config->pup->resources->toArray();
             }
 
             if (!isset($config['type']) || (isset($config['type']) && !in_array($config['type'], $this->resourceTypes))) {
-                throw new Exception('Wrong configuration for key "type" or the key does not exists');
+                throw new \Exception('Wrong configuration for key "type" or the key does not exists');
             }
 
             if (!isset($config['resources']) || (isset($config['resources']) && !is_array($config['resources']))) {
-                throw new Exception('Resources key must be an array');
+                throw new \Exception('Resources key must be an array');
             }
 
             return $config;
         } else {
-            throw new Exception('Configuration error: I couldn\'t find the configuration key "pup" ');
+            throw new \Exception('Configuration error: I couldn\'t find the configuration key "pup" ');
         }
     }
 }

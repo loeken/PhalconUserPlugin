@@ -2,7 +2,7 @@
 
 namespace Phalcon\UserPlugin\Acl;
 
-use Phalcon\Mvc\User\Component;
+use Phalcon\Mvc\User\Component as Component;
 use Phalcon\Acl\Adapter\Memory as AclAdapter;
 use Phalcon\Acl\Role as AclRole;
 use Phalcon\Acl\Resource as AclResource;
@@ -62,7 +62,7 @@ class Acl extends Component
     /**
      * Returns the ACL list.
      *
-     * @return Phalcon\Acl\Adapter\Memory
+     * @return \Phalcon\Acl\Adapter\Memory
      */
     public function getAcl()
     {
@@ -156,7 +156,7 @@ class Acl extends Component
         $profiles = UserGroups::find('active = 1');
 
         foreach ($profiles as $profile) {
-            $acl->addRole(new AclRole($profile->name));
+            $acl->addRole(new AclRole($profile->getName()));
         }
 
         foreach ($this->_privateResources as $resource => $actions) {
@@ -168,11 +168,11 @@ class Acl extends Component
 
             //Grant permissions in "permissions" model
             foreach ($profile->getPermissions() as $permission) {
-                $acl->allow($profile->name, $permission->resource, $permission->action);
+                $acl->allow($profile->getName(), $permission->resource, $permission->action);
             }
 
             //Always grant these permissions
-            $acl->allow($profile->name, 'users', 'changePassword');
+            $acl->allow($profile->getName(), 'users', 'changePassword');
         }
 
         if (is_writable(__DIR__.$this->_filePath)) {
