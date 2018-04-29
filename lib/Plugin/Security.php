@@ -114,7 +114,6 @@ class Security extends Plugin
                 $this->flash->notice('Private area. Please login.');
                 return $this->response->redirect($config->pup->redirect->failure)->send();
             }
-            die();
         }
 
         $view->setVar('identity', $identity);
@@ -196,7 +195,8 @@ class Security extends Plugin
                                 return false;
                             }
                             else {
-                                return false;                            }
+                                return false;
+                            }
                         }
                     }
                 }
