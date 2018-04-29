@@ -195,8 +195,7 @@ class Security extends Plugin
                                 return false;
                             }
                             else {
-                                return false;
-                            }
+                                return false;                            }
                         }
                     }
                 }

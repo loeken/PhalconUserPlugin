@@ -808,14 +808,7 @@ class User extends \Phalcon\Mvc\Model
      */
     public function validation()
     {
-        $this->validate(new Uniqueness(
-            array(
-                'field' => 'email',
-                'message' => 'The email is already registered',
-            )
-        ));
 
-        return true !== $this->validationHasFailed();
     }
 
     /**
