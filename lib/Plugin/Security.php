@@ -86,6 +86,7 @@ class Security extends Plugin
      */
     public function beforeDispatchLoop(Event $event, Dispatcher $dispatcher)
     {
+
         $auth = $this->getAuth($dispatcher);
         $view = $this->getView($dispatcher);
 
@@ -111,9 +112,9 @@ class Security extends Plugin
         if (true === $needsIdentity) {
             if (!is_array($identity)) {
                 $this->flash->notice('Private area. Please login.');
-
                 return $this->response->redirect($config->pup->redirect->failure)->send();
             }
+            die();
         }
 
         $view->setVar('identity', $identity);
@@ -131,11 +132,12 @@ class Security extends Plugin
     {
         $actionName = $dispatcher->getActionName();
         $controllerName = $dispatcher->getControllerName();
+        $moduleName = $dispatcher->getModuleName();
 
         if ($config['type'] == 'public') { // all except ..
             return $this->checkPublicResources($config['resources'], $actionName, $controllerName);
         } else {
-            return $this->checkPrivateResources($config['resources'], $actionName, $controllerName);
+            return $this->checkPrivateResources($config['resources'], $actionName, $controllerName, $moduleName);
         }
     }
 
@@ -176,17 +178,26 @@ class Security extends Plugin
      *
      * @return bool
      */
-    private function checkPrivateResources($resources, $actionName, $controllerName)
+    private function checkPrivateResources($resources, $actionName, $controllerName, $moduleName = false)
     {
         $resources = isset($resources['*']) ? $resources['*'] : $resources;
 
-        foreach ($resources as $controller => $actions) {
-            if ($controller == $controllerName) {
-                if (isset($controller['*'])) {
-                    return true;
-                } else {
-                    if (in_array($actionName, $actions)) {
-                        return false;
+        foreach ($resources as $module => $controllers) {
+
+            foreach ($controllers as $controller => $actions) {
+
+                if ($module == $moduleName ) {
+
+                    if ($controller == $controllerName) {
+                        if (isset($controller['*'])) {
+                            return true;
+                        } else {
+                            if (in_array($actionName, $actions)) {
+                                return false;
+                            }
+                            else {
+                                return false;                            }
+                        }
                     }
                 }
             }
@@ -235,3 +246,4 @@ class Security extends Plugin
         }
     }
 }
+
