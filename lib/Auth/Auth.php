@@ -161,7 +161,7 @@ class Auth extends Component
             $user = $this->newUser()
                 ->setName($facebookUser['name'])
                 ->setEmail($email)
-                ->setPassword($di->get('security')->hash($password))
+                ->setPassword($this->di->get('security')->hash($password))
                 ->setFacebookId($facebookUser['id'])
                 ->setFacebookName($facebookUser['name'])
                 ->setFacebookData(serialize($facebookUser));
@@ -211,7 +211,7 @@ class Auth extends Component
 
     protected function authenticateOrCreateLinkedInUser($email, $info)
     {
-        $pupRedirect = $di->get('config')->pup->redirect;
+        $pupRedirect = $this->di->get('config')->pup->redirect;
 
         preg_match('#id=\d+#', $info['siteStandardProfileRequest']['url'], $matches);
 
@@ -236,7 +236,7 @@ class Auth extends Component
             $user = $this->newUser()
                 ->setName($info['firstName'].' '.$info['lastName'])
                 ->setEmail($email)
-                ->setPassword($di->get('security')->hash($password))
+                ->setPassword($this->di->get('security')->hash($password))
                 ->setLinkedinId($linkedInId)
                 ->setLinkedinName($info['firstName'].' '.$info['lastName'])
                 ->setLinkedinData(json_encode($info));
@@ -320,7 +320,7 @@ class Auth extends Component
         $config = $di->get('config')->pup->connectors->google->toArray();
 
         $pupRedirect = $di->get('config')->pup->redirect;
-        $config['redirect_uri'] = $config['redirect_uri'].'user/loginWithGoogle';
+        $config['redirect_uri'] = $config['redirect_uri'];
 
         $google = new GoogleConnector($config);
 
@@ -388,6 +388,8 @@ class Auth extends Component
      */
     protected function createUser($user)
     {
+        $config = $this->di->getShared('config');
+        $pupRedirect = $config->pup->redirect;
         if (true === $user->create()) {
             $this->setIdentity($user);
             $this->saveSuccessLogin($user);
