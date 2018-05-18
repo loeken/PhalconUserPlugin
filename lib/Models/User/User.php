@@ -146,6 +146,11 @@ class User extends \Phalcon\Mvc\Model
     protected $updated_at;
 
     /**
+     * @var string
+     */
+    protected $ssh_key;
+
+    /**
      * Method to set the value of field id.
      *
      * @param int $id
@@ -500,6 +505,19 @@ class User extends \Phalcon\Mvc\Model
 
         return $this;
     }
+    /**
+     * Method to set the value of field updated_at.
+     *
+     * @param string $ssh_key
+     *
+     * @return $this
+     */
+    public function setSshKey($ssh_key)
+    {
+        $this->ssh_key = $ssh_key;
+
+        return $this;
+    }
 
     /**
      * Returns the value of field id.
@@ -791,6 +809,16 @@ class User extends \Phalcon\Mvc\Model
     public function getUpdatedAt()
     {
         return $this->updated_at;
+    }
+
+    /**
+     * Returns the value of field ssh_key.
+     *
+     * @return string
+     */
+    public function getSshKey()
+    {
+        return $this->ssh_key;
     }
 
     /**
