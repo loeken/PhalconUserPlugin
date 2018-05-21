@@ -151,6 +151,11 @@ class User extends \Phalcon\Mvc\Model
     protected $ssh_key;
 
     /**
+     * @var string
+     */
+    protected $github_name;
+
+    /**
      * Method to set the value of field id.
      *
      * @param int $id
@@ -518,6 +523,19 @@ class User extends \Phalcon\Mvc\Model
 
         return $this;
     }
+    /**
+     * Method to set the value of field github_name.
+     *
+     * @param string $github_name
+     *
+     * @return $this
+     */
+    public function setGithubName($github_name)
+    {
+        $this->github_name = $github_name;
+
+        return $this;
+    }
 
     /**
      * Returns the value of field id.
@@ -819,6 +837,16 @@ class User extends \Phalcon\Mvc\Model
     public function getSshKey()
     {
         return $this->ssh_key;
+    }
+
+    /**
+     * Returns the value of field github_name.
+     *
+     * @return string
+     */
+    public function getGithubName()
+    {
+        return $this->github_name;
     }
 
     /**
