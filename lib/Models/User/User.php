@@ -156,6 +156,11 @@ class User extends \Phalcon\Mvc\Model
     protected $github_name;
 
     /**
+     * @var string
+     */
+    protected $twofa_key;
+
+    /**
      * Method to set the value of field id.
      *
      * @param int $id
@@ -536,6 +541,19 @@ class User extends \Phalcon\Mvc\Model
 
         return $this;
     }
+    /**
+     * Method to set the value of field github_name.
+     *
+     * @param string $github_name
+     *
+     * @return $this
+     */
+    public function setTwofaKey($key)
+    {
+        $this->twofa_key = $key;
+
+        return $this;
+    }
 
     /**
      * Returns the value of field id.
@@ -847,6 +865,16 @@ class User extends \Phalcon\Mvc\Model
     public function getGithubName()
     {
         return $this->github_name;
+    }
+
+    /**
+     * Returns the value of field github_name.
+     *
+     * @return string
+     */
+    public function getTwofaKey()
+    {
+        return $this->twofa_key;
     }
 
     /**
