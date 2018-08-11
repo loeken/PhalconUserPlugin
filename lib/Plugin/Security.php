@@ -111,7 +111,7 @@ class Security extends Plugin
 
         if (true === $needsIdentity) {
             if (!is_array($identity)) {
-                $this->flash->notice('Private area. Please login.');
+                $this->flash->notice('Private area. Please login!');
                 return $this->response->redirect($config->pup->redirect->failure)->send();
             }
         }

@@ -46,7 +46,26 @@ class LoginForm extends Form
             ))
         );
 
+
+        $twofa_key = new Text('twofa_key', array(
+            'placeholder' => 'Two Factor Code',
+        ));
+        $this->add($twofa_key);
+
+
+
+        //Password
+        $password = new Password('password', array(
+            'placeholder' => 'Password',
+        ));
+
+        $password->addValidator(
+            new PresenceOf(array(
+                'message' => 'The password is required',
+            ))
+        );
         $this->add($password);
+
 
         //Remember
         $remember = new Check('remember', array(

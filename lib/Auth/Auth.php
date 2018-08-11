@@ -40,6 +40,18 @@ class Auth extends Component
             throw new Exception('Wrong email/password combination');
         }
 
+        if (($user->getTwofaKey() != "" ) && (strlen($credentials['twofa_key']) != 6 )) {
+            $this->registerUserThrottling($user->getId());
+            throw new Exception("You need to provide a valid two factor auth key to login");
+        }
+        $ga = new \PHPGangsta_GoogleAuthenticator();
+
+        $checkResult = $ga->verifyCode($user->getTwofaKey(), $credentials['twofa_key'], 2);
+        if ($checkResult == false ) {
+            $this->registerUserThrottling($user->getId());
+            throw new Exception("You two factor key is not valid");
+        }
+
         $this->checkUserFlags($user);
         $this->saveSuccessLogin($user);
 
@@ -93,6 +105,7 @@ class Auth extends Component
                     'email' => $this->request->getPost('email'),
                     'password' => $this->request->getPost('password'),
                     'remember' => $this->request->getPost('remember'),
+                    'twofa_key' => $this->request->getPost('twofa_key'),
                 ));
 
                 $pupRedirect = $this->getDI()->get('config')->pup->redirect;
