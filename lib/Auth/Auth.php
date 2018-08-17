@@ -47,7 +47,8 @@ class Auth extends Component
         $ga = new \PHPGangsta_GoogleAuthenticator();
 
         $checkResult = $ga->verifyCode($user->getTwofaKey(), $credentials['twofa_key'], 2);
-        if ($checkResult == false ) {
+        if (($user->getTwofaKey() != "" ) && ($checkResult == false )) {
+
             $this->registerUserThrottling($user->getId());
             throw new Exception("You two factor key is not valid");
         }
