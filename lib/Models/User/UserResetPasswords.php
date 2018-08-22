@@ -218,7 +218,8 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
         $this->created_at = date('Y-m-d H:i:s');
 
         //Generate a random confirmation code
-        $this->code = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(openssl_random_pseudo_bytes(24)));
+        $this->code = preg_replace('/[^a-zA-Z0-9]/', '', 
+base64_encode(openssl_random_pseudo_bytes(24)));
 
         //Set status to non-confirmed
         $this->reset = 0;
@@ -231,12 +232,14 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
     {
         $this->getDI()->getMail()->send(
             array(
-                $this->user->getEmail() => $this->user->getName() ? $this->user->getName() : 'Customer',
+                $this->user->getEmail() => $this->user->getName() ? $this->user->getName() : 
+'Customer',
             ),
             'Reset your password',
             'reset',
             array(
-                'resetUrl' => '/user/resetPassword/'.$this->getCode().'/'.$this->user->getEmail(),
+                'resetUrl' => 
+'/session/index/user/resetPassword/'.$this->getCode().'/'.$this->user->getEmail(),
             )
         );
     }
@@ -250,3 +253,4 @@ class UserResetPasswords extends \Phalcon\Mvc\Model
         $this->updated_at = date('Y-m-d H:i:s');
     }
 }
+
