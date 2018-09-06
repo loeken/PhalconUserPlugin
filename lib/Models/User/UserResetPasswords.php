@@ -238,8 +238,7 @@ base64_encode(openssl_random_pseudo_bytes(24)));
             'Reset your password',
             'reset',
             array(
-                'resetUrl' => 
-'/session/index/user/resetPassword/'.$this->getCode().'/'.$this->user->getEmail(),
+                'resetUrl' => '/session/index/resetPassword/'.$this->getCode().'/'.$this->user->getEmail(),
             )
         );
     }
