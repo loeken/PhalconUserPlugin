@@ -161,6 +161,11 @@ class User extends \Phalcon\Mvc\Model
     protected $twofa_key;
 
     /**
+     * @var integer
+     */
+    protected $kryptco;
+
+    /**
      * Method to set the value of field id.
      *
      * @param int $id
@@ -544,7 +549,7 @@ class User extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field github_name.
      *
-     * @param string $github_name
+     * @param string $twofa_key
      *
      * @return $this
      */
@@ -552,6 +557,18 @@ class User extends \Phalcon\Mvc\Model
     {
         $this->twofa_key = $key;
 
+        return $this;
+    }
+    /**
+     * Method to set the value of field github_name.
+     *
+     * @param integer $kryptco
+     *
+     * @return $this
+     */
+    public function setKryptco($key)
+    {
+        $this->kryptco = $key;
         return $this;
     }
 
@@ -868,13 +885,23 @@ class User extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field github_name.
+     * Returns the value of field twofa_key.
      *
      * @return string
      */
     public function getTwofaKey()
     {
         return $this->twofa_key;
+    }
+
+    /**
+     * Returns the value of field kryptco.
+     *
+     * @return string
+     */
+    public function getKryptco()
+    {
+        return $this->kryptco;
     }
 
     /**
