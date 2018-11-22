@@ -2,7 +2,9 @@
 
 namespace Phalcon\UserPlugin\Models\User;
 
-use Phalcon\Mvc\Model\Validator\Uniqueness;
+use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
+use Phalcon\Validation;
+use Phalcon\Validation\Validator\Email;
 
 class User extends \Phalcon\Mvc\Model
 {
@@ -919,7 +921,15 @@ class User extends \Phalcon\Mvc\Model
      */
     public function validation()
     {
+        $validator = new Validation();
 
+        $validator->add('email', new Email([
+            'message' => 'Invalid email supplied'
+        ]));
+        $validator->add('email', new UniquenessValidator(array(
+            'message' => 'Sorry, The email has been used by another user'
+        )));
+        return $this->validate($validator);
     }
 
     /**
@@ -927,7 +937,8 @@ class User extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->hasOne('id', 'Phalcon\UserPlugin\Models\User\UserProfile', 'user_id', array(
+        $this->hasOne('id', 'Phalcon\UserPlugin\Models\User\UserProfile', 'user_id', 
+array(
             'alias' => 'profile',
             'reusable' => true,
             'foreignKey' => array(
@@ -935,26 +946,30 @@ class User extends \Phalcon\Mvc\Model
             ),
         ));
 
-        $this->hasMany('id', 'Phalcon\UserPlugin\Models\User\UserSuccessLogins', 'user_id', array(
+        $this->hasMany('id', 'Phalcon\UserPlugin\Models\User\UserSuccessLogins', 
+'user_id', array(
             'alias' => 'successLogins',
             'foreignKey' => array(
                 'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE,
             ),
         ));
 
-        $this->belongsTo('group_id', 'Phalcon\UserPlugin\Models\User\UserGroups', 'id', array(
+        $this->belongsTo('group_id', 'Phalcon\UserPlugin\Models\User\UserGroups', 
+'id', array(
             'alias' => 'group',
             'reusable' => true,
         ));
 
-        $this->hasMany('id', 'Phalcon\UserPlugin\Models\User\UserPasswordChanges', 'user_id', array(
+        $this->hasMany('id', 'Phalcon\UserPlugin\Models\User\UserPasswordChanges', 
+'user_id', array(
             'alias' => 'passwordChanges',
             'foreignKey' => array(
                 'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE,
             ),
         ));
 
-        $this->hasMany('id', 'Phalcon\UserPlugin\Models\User\UserResetPasswords', 'user_id', array(
+        $this->hasMany('id', 'Phalcon\UserPlugin\Models\User\UserResetPasswords', 
+'user_id', array(
             'alias' => 'resetPasswords',
             'foreignKey' => array(
                 'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE,
@@ -989,7 +1004,8 @@ class User extends \Phalcon\Mvc\Model
     public function beforeValidationOnCreate()
     {
         if (empty($this->password)) {
-            $tempPassword = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(openssl_random_pseudo_bytes(12)));
+            $tempPassword = preg_replace('/[^a-zA-Z0-9]/', '', 
+base64_encode(openssl_random_pseudo_bytes(12)));
             $this->must_change_password = 1;
             $this->password = $this->getDI()->getSecurity()->hash($tempPassword);
         }
@@ -1025,3 +1041,4 @@ class User extends \Phalcon\Mvc\Model
         }
     }
 }
+
