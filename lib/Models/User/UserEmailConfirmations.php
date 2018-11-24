@@ -230,7 +230,7 @@ class UserEmailConfirmations extends \Phalcon\Mvc\Model
             'confirmation',
             array(
                 'confirmUrl' => 
-'/session/index/confirmEmail/'.$this->getCode().'/'.$this->user->getEmail(),
+'/session/index/confirmEmail/'.$this->getCode(),
             )
         );
     }
