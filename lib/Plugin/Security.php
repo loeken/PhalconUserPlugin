@@ -177,9 +177,12 @@ class Security extends Plugin
      *
      * @return bool
      */
-    private function checkPrivateResources($resources, $actionName, $controllerName, $moduleName = false)
+    private function checkPrivateResources($resources, $actionName = "index", $controllerName = 
+"index", 
+$moduleName = false)
     {
         $resources = isset($resources['*']) ? $resources['*'] : $resources;
+	if ($moduleName == "landing" ) { return false; }
 
         foreach ($resources as $module => $controllers) {
 
