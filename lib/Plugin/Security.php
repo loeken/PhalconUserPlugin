@@ -111,8 +111,10 @@ class Security extends Plugin
 
         if (true === $needsIdentity) {
             if (!is_array($identity)) {
-                $this->flash->notice('Private area. Please login!');
-                return $this->response->redirect($config->pup->redirect->failure)->send();
+                if ($this->dispatcher->getModuleName() != "api" ) {
+                    $this->flash->notice('Private area. Please login!');
+                    return $this->response->redirect($config->pup->redirect->failure)->send();
+                }
             }
         }
 
@@ -177,34 +179,47 @@ class Security extends Plugin
      *
      * @return bool
      */
-    private function checkPrivateResources($resources, $actionName = "index", $controllerName = 
-"index", 
-$moduleName = false)
+    private function checkPrivateResources($resources, $actionName = "index", $controllerName = "index", $moduleName = false)
     {
         $resources = isset($resources['*']) ? $resources['*'] : $resources;
-	if ($moduleName == "landing" ) { return false; }
+	    if ($moduleName == "landing" ) { return false; }
+	    if ($moduleName == "session" ) { return false; }
+	    if ($moduleName == "api" ) { return true; }
+
+        if (($moduleName == "dashboard" ) && ($controllerName == "test" )) {
+
+            return false;
+        }
 
         foreach ($resources as $module => $controllers) {
 
             foreach ($controllers as $controller => $actions) {
 
-                if ($module == $moduleName ) {
+                if ($module == $moduleName) {
 
                     if ($controller == $controllerName) {
+
                         if (isset($controller['*'])) {
                             return true;
-                        } else {
-                            if (in_array($actionName, $actions)) {
-                                return false;
+                        }
+                        $attributes = $actions['attributes'];
+
+                        if (count($attributes) > 0 ) {
+
+                            foreach ($actions['attributes'] as $action => $param) {
+
+                                if ($actionName == $action) {
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+
                             }
-                            else {
-                                return false;                            }
                         }
                     }
                 }
             }
         }
-
         return true;
     }
 
